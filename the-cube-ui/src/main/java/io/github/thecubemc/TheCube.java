@@ -7,6 +7,7 @@ import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import io.github.thecubemc.fs.FileSystem;
 import io.github.thecubemc.http.Network;
+import io.github.thecubemc.ui.TheCubeSplashScreen;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,14 +39,16 @@ public final class TheCube{
     return injector.getInstance(TheCube.class);
   }
 
-  public void start(){
+  public void start()
+  throws Exception{
     this.logger.info("Starting TheCube");
     SwingUtilities.invokeLater(() ->{
-
+      TheCube.injector.getInstance(TheCubeSplashScreen.class).setVisible(true);
     });
   }
 
-  public static void main(String... args){
+  public static void main(String... args)
+  throws Exception{
     TheCube.instance().start();
   }
 }

@@ -1,0 +1,10 @@
+group 'io.github.thecubemc'
+version '1.0.0.0'
+
+apply plugin: 'java'
+targetCompatibility = 1.8
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}

@@ -1,14 +1,51 @@
 package io.github.thecubemc;
 
+import com.google.common.eventbus.EventBus;
 import com.google.inject.Guice;
+import com.google.inject.Inject;
 import com.google.inject.Injector;
+import com.google.inject.Singleton;
+import io.github.thecubemc.fs.FileSystem;
 import io.github.thecubemc.http.Network;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.swing.SwingUtilities;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+
+@Singleton
 public final class TheCube{
   public static final Injector injector = Guice.createInjector(new TheCubeModule());
 
+  public final Network network;
+  public final FileSystem fileSystem;
+  public final Logger logger;
+  public final EventBus events;
+  public final ExecutorService executor;
+
+  @Inject
+  private TheCube(Network net, FileSystem fs, ThreadFactory threadFactory){
+    this.network = net;
+    this.fileSystem = fs;
+    this.logger = LoggerFactory.getLogger(TheCube.class);
+    this.events = new EventBus("TheCube-EventBus");
+    this.executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors() / 2, threadFactory);
+  }
+
+  public static TheCube instance(){
+    return injector.getInstance(TheCube.class);
+  }
+
+  public void start(){
+    this.logger.info("Starting TheCube");
+    SwingUtilities.invokeLater(() ->{
+
+    });
+  }
+
   public static void main(String... args){
-    Network net = injector.getInstance(Network.class);
-    System.out.println(net.userAgent());
+    TheCube.instance().start();
   }
 }

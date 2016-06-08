@@ -7,6 +7,7 @@ import io.github.thecubemc.http.Network;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.concurrent.ThreadFactory;
 
 final class TheCubeModule
 extends AbstractModule {
@@ -22,5 +23,7 @@ extends AbstractModule {
         .to(TheCubeNetwork.class);
     this.bind(FileSystem.class)
         .to(TheCubeFileSystem.class);
+    this.bind(ThreadFactory.class)
+        .to(TheCubeThreadFactory.class);
   }
 }

@@ -11,15 +11,19 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 @Singleton
 public final class TheCubeSplashScreen
-extends JWindow {
+extends JWindow
+implements PropertyChangeListener{
   private final BufferedImage background;
   private final String version;
   private final Font font;
 
   private int progress = 0;
+  private String message = "Loading theCube";
 
   @Inject
   private TheCubeSplashScreen(@TheCubeResource("splash") BufferedImage bg, @TheCubeResource("font") Font font, @Named("theCube-version") String version){
@@ -29,16 +33,15 @@ extends JWindow {
     this.setSize(bg.getWidth(), bg.getHeight());
     this.setLocationRelativeTo(null);
     this.setAlwaysOnTop(true);
+    this.addPropertyChangeListener(this);
   }
 
   public void addProgress(int value){
-    if(this.progress >= 100) return;
-    this.progress += value;
-    System.out.println(this.progress);
+    this.firePropertyChange("progress", this.progress, this.progress + value);
   }
 
-  public int getProgress(){
-    return this.progress;
+  public void setMessage(String value){
+    this.firePropertyChange("message", this.message, value);
   }
 
   @Override
@@ -52,10 +55,20 @@ extends JWindow {
     g2.setFont(this.font.deriveFont(12.0F));
     g2.drawString("v" + this.version, 65, 40 + height);
     g2.setFont(this.font.deriveFont(12.0F));
-
-    System.out.println((this.progress * 100) / 10000);
-
     g2.setColor(Color.CYAN);
-    g2.fillRect(0, this.getHeight() - 108, this.getWidth() * ((this.progress * 100) / 10000), 8);
+    float width = ((float) this.progress) / 100;
+    g2.fillRect(0, this.getHeight() - 108, (int) (this.getWidth() * width), 8);
+    g2.drawString(this.message, 12, this.getHeight() - 108 - g2.getFontMetrics().getHeight());
+  }
+
+  @Override
+  public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
+    if(propertyChangeEvent.getPropertyName().equals("progress")){
+      this.progress = ((int) propertyChangeEvent.getNewValue());
+      this.repaint();
+    } else if(propertyChangeEvent.getPropertyName().equals("message")){
+      this.message = ((String) propertyChangeEvent.getNewValue());
+      this.repaint();
+    }
   }
 }

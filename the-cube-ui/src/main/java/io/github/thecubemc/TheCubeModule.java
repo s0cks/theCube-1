@@ -1,10 +1,14 @@
 package io.github.thecubemc;
 
+import com.google.gson.Gson;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provider;
+import com.google.inject.matcher.Matchers;
 import com.google.inject.name.Names;
+import io.github.thecubemc.annotations.RequiresAccount;
 import io.github.thecubemc.fs.FileSystem;
 import io.github.thecubemc.http.Network;
+import io.github.thecubemc.interceptor.RequiresAccountInterceptor;
 
 import javax.imageio.ImageIO;
 import java.awt.Font;
@@ -16,8 +20,13 @@ import java.util.concurrent.ThreadFactory;
 
 final class TheCubeModule
 extends AbstractModule {
+  private final Gson gson = new Gson();
+
   @Override
   protected void configure() {
+    // Method Interceptors
+    this.bindInterceptor(Matchers.any(), Matchers.annotatedWith(RequiresAccount.class), new RequiresAccountInterceptor());
+
     // Default Values
     this.bind(String.class)
         .annotatedWith(Names.named("theCube-version"))
@@ -33,6 +42,8 @@ extends AbstractModule {
         .to(TheCubeFileSystem.class);
     this.bind(ThreadFactory.class)
         .to(TheCubeThreadFactory.class);
+    this.bind(Gson.class)
+        .toInstance(this.gson);
 
     // Resources
     this.bind(BufferedImage.class)

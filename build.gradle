@@ -17,6 +17,7 @@ subprojects {
     dependencies {
         testCompile group: 'junit', name: 'junit', version: '4.11'
 
+        compile group: 'com.mojang', name: 'authlib', version: '1.5.17'
         compile group: 'com.google.code.gson', name: 'gson', version: '2.6.2'
         compile group: 'com.google.guava', name: 'guava', version: '18.0'
         compile group: 'com.google.inject', name: 'guice', version: '4.0-beta4'

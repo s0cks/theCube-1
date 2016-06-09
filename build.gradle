@@ -10,16 +10,16 @@ buildscript{
     }
 }
 
-project.ext{
-    aspectjVersion = "1.8.6"
-}
-
 group 'io.github.thecubemc'
 version '1.0.0.0'
 
 apply plugin: 'idea'
 
 subprojects {
+    project.ext{
+        aspectjVersion = "1.8.4"
+    }
+
     apply plugin: 'aspectj'
     apply plugin: 'java'
     targetCompatibility = 1.8
@@ -33,10 +33,9 @@ subprojects {
         }
     }
 
+    apply plugin: 'aspectj'
     dependencies {
         testCompile group: 'junit', name: 'junit', version: '4.11'
-
-        aspectpath project(":the-cube-services")
 
         compile group: 'com.mojang', name: 'authlib', version: '1.5.17'
         compile group: 'com.google.code.gson', name: 'gson', version: '2.6.2'
@@ -47,6 +46,5 @@ subprojects {
         compile group: 'org.pegdown', name: 'pegdown', version: '1.6.0'
         compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.21'
         compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.21'
-        compile group: 'org.aspectj', name: 'aspectjrt', version: '1.8.6'
     }
 }

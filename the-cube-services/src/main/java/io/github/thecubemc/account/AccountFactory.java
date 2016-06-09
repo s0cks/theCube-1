@@ -4,7 +4,8 @@ import com.google.common.eventbus.EventBus;
 import com.google.inject.Injector;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
-import io.github.thecubemc.event.LoginEvent;
+import io.github.thecubemc.event.CompleteLoginEvent;
+import io.github.thecubemc.event.RequestLoginEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,9 +24,9 @@ implements Provider<AccountStub> {
 
   public AccountStub login(Injector injector, String name) {
     if (this.accounts.containsKey(name)) return this.accounts.get(name)
-                                                             .getStub(null);
+                                                             .getStub();
     EventBus eventbus = injector.getInstance(EventBus.class);
-    LoginEvent event = new LoginEvent(injector);
+    RequestLoginEvent event = new RequestLoginEvent(injector);
     eventbus.post(event);
 
     if (event.isCanceled()) {
@@ -34,6 +35,7 @@ implements Provider<AccountStub> {
     }
 
     Account acc = this.auth.login(new Account(event.getUsername(), event.getPassword(), true));
+    injector.getInstance(EventBus.class).post(new CompleteLoginEvent(injector, this.get(), acc.getStub()));
     this.accounts.put(name, acc);
     this.set(acc);
     return this.get();
@@ -52,7 +54,7 @@ implements Provider<AccountStub> {
   public AccountStub get() {
     this.lock.lock();
     try{
-      return this.current == null ? defaultStub : this.current.getStub(null);
+      return this.current == null ? defaultStub : this.current.getStub();
     } finally{
       this.lock.unlock();
     }

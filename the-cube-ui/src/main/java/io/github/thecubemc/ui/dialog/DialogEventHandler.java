@@ -4,8 +4,10 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import io.github.thecubemc.event.CompleteLoginEvent;
 import io.github.thecubemc.event.ErrorEvent;
-import io.github.thecubemc.event.LoginEvent;
+import io.github.thecubemc.event.RequestLoginEvent;
+import io.github.thecubemc.ui.TheCubeFrame;
 
 import javax.swing.SwingUtilities;
 import java.lang.reflect.InvocationTargetException;
@@ -15,7 +17,7 @@ public final class DialogEventHandler{
   @Inject private DialogEventHandler(){}
 
   @Subscribe
-  public void onLoginEvent(LoginEvent e){
+  public void onRequestLoginEvent(RequestLoginEvent e){
     try {
       System.out.println("Spawning LoginDialog");
       LoginDialog dialog = e.injector.getInstance(LoginDialog.class);
@@ -34,5 +36,11 @@ public final class DialogEventHandler{
   @Subscribe
   public void onErrorEvent(ErrorEvent e){
     System.out.println(e.message);
+  }
+
+  @Subscribe
+  public void onCompleteLoginEvent(CompleteLoginEvent e)
+  throws Exception{
+    e.injector.getInstance(TheCubeFrame.class).setStatusTitle(e.to.getMinecraftUsername(e.injector));
   }
 }

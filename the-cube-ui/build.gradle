@@ -11,4 +11,5 @@ repositories {
 
 dependencies{
     compile project(":the-cube-services")
+    aspectpath project(":the-cube-services")
 }

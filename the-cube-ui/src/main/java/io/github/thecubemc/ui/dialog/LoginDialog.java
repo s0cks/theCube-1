@@ -1,9 +1,8 @@
 package io.github.thecubemc.ui.dialog;
 
 import io.github.thecubemc.account.AccountStub;
-import io.github.thecubemc.annotations.Current;
 import io.github.thecubemc.annotations.TheCubeResource;
-import io.github.thecubemc.event.LoginEvent;
+import io.github.thecubemc.event.RequestLoginEvent;
 import io.github.thecubemc.ui.TheCubeFrame;
 
 import javax.inject.Inject;
@@ -29,10 +28,10 @@ extends JDialog{
   private final JPasswordField passwordField;
   private final JButton closeButton;
   private final JButton loginButton;
-  private LoginEvent event;
+  private RequestLoginEvent event;
 
   @Inject
-  private LoginDialog(TheCubeFrame frame, @Current AccountStub acc, @TheCubeResource("login") BufferedImage background){
+  private LoginDialog(TheCubeFrame frame, AccountStub acc, @TheCubeResource("login") BufferedImage background){
     super(frame, "Login", ModalityType.APPLICATION_MODAL);
     this.setUndecorated(true);
     this.setLayout(new BorderLayout());
@@ -67,7 +66,7 @@ extends JDialog{
     this.add(panel, BorderLayout.CENTER);
   }
 
-  protected void setEvent(LoginEvent e){
+  protected void setEvent(RequestLoginEvent e){
     this.event = e;
   }
 

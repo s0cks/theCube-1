@@ -9,7 +9,6 @@ import java.net.Proxy;
 
 final class MojangAuthentication{
   public Account login(Account acc){
-    System.out.println("Getting authentication");
     YggdrasilUserAuthentication auth = null;
     try{
       auth = ((YggdrasilUserAuthentication) new YggdrasilAuthenticationService(Proxy.NO_PROXY, "1").createUserAuthentication(Agent.MINECRAFT));
@@ -18,7 +17,6 @@ final class MojangAuthentication{
       return acc;
     }
 
-    System.out.println("Logging in with: " + acc.getUsername());
     try{
       if(auth.isLoggedIn()){
         auth.logOut();
@@ -29,7 +27,6 @@ final class MojangAuthentication{
       auth.logIn();
       acc.setAccessToken(auth.getAuthenticatedToken());
       acc.setUUID(auth.getSelectedProfile().getId().toString());
-      System.out.println("Logged in with: " + acc.getUsername());
     } catch(AuthenticationException e){
       // TODO: Toaster Message
       e.printStackTrace(System.err);

@@ -1,7 +1,5 @@
 package io.github.thecubemc.account;
 
-import com.google.inject.Injector;
-
 final class Account{
   private final boolean real;
   private final String password;
@@ -16,7 +14,7 @@ final class Account{
     this.username = username;
   }
 
-  public AccountStub getStub(Injector injector){
+  public AccountStub getStub(){
     if(this.stub == null){
       this.stub = new AccountStub(this);
     }

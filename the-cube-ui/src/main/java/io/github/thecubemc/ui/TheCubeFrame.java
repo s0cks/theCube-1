@@ -24,17 +24,22 @@ extends JFrame
 implements MouseMotionListener,
            MouseListener{
   private final AccountFactory accounts;
+  private final String version;
   private int dX;
   private int dY;
 
   @Inject
   private TheCubeFrame(@Named("theCube-version") String version, AccountFactory factory)
   throws IOException {
-    super("theCube - v" + version + " - " + factory.get().getMinecraftUsername(TheCube.injector));
+    super("theCube - v" + version);
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     this.setSize(new Dimension(1000, 640));
-
     this.accounts = factory;
+    this.version = version;
+  }
+
+  public void setStatusTitle(String status){
+    this.setTitle("theCube - v" + this.version + " - " + status);
   }
 
   @Override
@@ -44,11 +49,11 @@ implements MouseMotionListener,
     AffineTransform rotate = new AffineTransform();
     rotate.setToRotation(Math.toRadians(270), this.getWidth() - 10, ((this.getHeight() - g2.getFontMetrics().getAscent()) / 2) - 2);
     g2.setTransform(rotate);
-    g2.setColor(Color.WHITE);
+    g2.setColor(Color.BLACK);
     try {
-      g2.drawString(this.accounts.get().getMinecraftUsername(TheCube.injector), 100, ((this.getHeight() - g2.getFontMetrics().getAscent()) / 2) - 30);
+      g2.drawString(this.accounts.get().getMinecraftUsername(TheCube.injector), 25, 25);
     } catch (IOException e) {
-      g2.drawString(e.getMessage(), 100, ((this.getHeight() - g2.getFontMetrics().getAscent()) / 2) - 30);
+      throw new RuntimeException(e);
     }
     g2.setTransform(t);
   }

@@ -2,19 +2,19 @@ package io.github.thecubemc.event;
 
 import com.google.inject.Injector;
 
-public final class LoginEvent{
+public final class RequestLoginEvent {
   public final Injector injector;
   private boolean canceled = false;
   private String username;
   private String password;
 
-  public LoginEvent(Injector injector) {this.injector = injector;}
+  public RequestLoginEvent(Injector injector) {this.injector = injector;}
 
   public String getPassword() {
     return password;
   }
 
-  public LoginEvent setPassword(String password) {
+  public RequestLoginEvent setPassword(String password) {
     this.password = password;
     return this;
   }
@@ -23,7 +23,7 @@ public final class LoginEvent{
     return username;
   }
 
-  public LoginEvent setUsername(String username) {
+  public RequestLoginEvent setUsername(String username) {
     this.username = username;
     return this;
   }

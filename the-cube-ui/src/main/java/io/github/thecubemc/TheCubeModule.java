@@ -1,10 +1,14 @@
 package io.github.thecubemc;
 
+import com.google.common.eventbus.EventBus;
 import com.google.gson.Gson;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provider;
 import com.google.inject.matcher.Matchers;
 import com.google.inject.name.Names;
+import io.github.thecubemc.account.AccountFactory;
+import io.github.thecubemc.account.AccountStub;
+import io.github.thecubemc.annotations.Current;
 import io.github.thecubemc.annotations.RequiresAccount;
 import io.github.thecubemc.fs.FileSystem;
 import io.github.thecubemc.http.Network;
@@ -44,11 +48,19 @@ extends AbstractModule {
         .to(TheCubeThreadFactory.class);
     this.bind(Gson.class)
         .toInstance(this.gson);
+    this.bind(AccountStub.class)
+        .annotatedWith(Current.class)
+        .toProvider(AccountFactory.class);
+    this.bind(EventBus.class)
+        .toProvider(() -> TheCube.instance().events);
 
     // Resources
     this.bind(BufferedImage.class)
         .annotatedWith(TheCubeResources.resource("splash"))
         .toProvider(new ImageResourceProvider("splash.png"));
+    this.bind(BufferedImage.class)
+        .annotatedWith(TheCubeResources.resource("login"))
+        .toProvider(new ImageResourceProvider("login.png"));
     this.bind(Font.class)
         .annotatedWith(TheCubeResources.resource("font"))
         .toProvider(new FontResourceProvider("font.ttf"));

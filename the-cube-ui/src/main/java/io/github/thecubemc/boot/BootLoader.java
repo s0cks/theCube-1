@@ -32,9 +32,11 @@ public final class BootLoader {
     }
   }
 
-  public static void runBootSequence(int forks){
+  public static void runBootSequence(int forks)
+  throws Exception{
     ExecutorService executor = Executors.newFixedThreadPool(forks);
-    while(!registeredTasks.isEmpty()){
+    do{
+      System.out.println("Fetching Next Task");
       BootTask task = findNextAvailableTask();
       if(task == null) break;
       System.out.println("Executing Task: " + task.name);
@@ -50,14 +52,10 @@ public final class BootLoader {
           ranTasks.add(task.name);
         }
       });
-    }
-    try {
-      executor.awaitTermination(1, TimeUnit.MINUTES);
-    } catch (InterruptedException e) {
-      System.err.println("Boot loading took too long: " + e.getMessage());
-      System.exit(-1);
-    }
-
+    } while(!registeredTasks.isEmpty());
+    executor.shutdown();
+    executor.awaitTermination(30, TimeUnit.SECONDS);
+    System.out.println("Done With Boot Sequence");
     SwingUtilities.invokeLater(()->{
       TheCube.injector.getInstance(TheCubeSplashScreen.class).dispose();
     });

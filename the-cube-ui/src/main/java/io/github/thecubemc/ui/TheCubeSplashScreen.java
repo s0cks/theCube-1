@@ -32,7 +32,6 @@ implements PropertyChangeListener{
     this.font = font;
     this.setSize(bg.getWidth(), bg.getHeight());
     this.setLocationRelativeTo(null);
-    this.setAlwaysOnTop(true);
     this.addPropertyChangeListener(this);
   }
 

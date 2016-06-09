@@ -1,6 +1,8 @@
 group 'io.github.thecubemc'
 version '1.0.0.0'
 
+apply plugin: 'idea'
+
 subprojects {
     apply plugin: 'java'
     targetCompatibility = 1.8

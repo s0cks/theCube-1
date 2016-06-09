@@ -10,6 +10,7 @@ import io.github.thecubemc.fs.FileSystem;
 import io.github.thecubemc.http.Network;
 import io.github.thecubemc.ui.TheCubeFrame;
 import io.github.thecubemc.ui.TheCubeSplashScreen;
+import io.github.thecubemc.ui.dialog.DialogEventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +39,7 @@ public final class TheCube{
   }
 
   public static TheCube instance(){
-    return injector.getInstance(TheCube.class);
+    return TheCube.injector.getInstance(TheCube.class);
   }
 
   public void start()
@@ -48,13 +49,20 @@ public final class TheCube{
       TheCube.injector.getInstance(TheCubeSplashScreen.class).setVisible(true);
     });
     BootLoader.runBootSequence(Runtime.getRuntime().availableProcessors() / 2);
+    this.logger.info("Showing main frame");
     SwingUtilities.invokeLater(()->{
       TheCube.injector.getInstance(TheCubeFrame.class).setVisible(true);
     });
   }
 
+  public void bindEventListeners(){
+    this.logger.info("Binding Event Listeners");
+    this.events.register(TheCube.injector.getInstance(DialogEventHandler.class));
+  }
+
   public static void main(String... args)
   throws Exception{
+    TheCube.instance().bindEventListeners();
     TheCube.instance().start();
   }
 }

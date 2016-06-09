@@ -2,28 +2,50 @@ package io.github.thecubemc.ui;
 
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
+import io.github.thecubemc.account.AccountFactory;
 
 import javax.inject.Inject;
 import javax.swing.JFrame;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.geom.AffineTransform;
 
 @Singleton
 public final class TheCubeFrame
 extends JFrame
 implements MouseMotionListener,
            MouseListener{
+  private final AccountFactory accounts;
   private int dX;
   private int dY;
 
   @Inject
-  private TheCubeFrame(@Named("theCube-version") String version){
-    super("theCube - v" + version);
+  private TheCubeFrame(@Named("theCube-version") String version, AccountFactory factory){
+    super("theCube - v" + version + " - " + factory.get().minecraftUsername);
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     this.setSize(new Dimension(1000, 640));
+
+    this.accounts = factory;
+  }
+
+  @Override
+  public void paint(Graphics graphics) {
+    Graphics2D g2 = ((Graphics2D) graphics);
+    AffineTransform t = g2.getTransform();
+    AffineTransform rotate = new AffineTransform();
+    rotate.setToRotation(Math.toRadians(270), this.getWidth() - 10, ((this.getHeight() - g2.getFontMetrics().getAscent()) / 2) - 2);
+    g2.setTransform(rotate);
+    g2.setColor(Color.WHITE);
+    g2.drawString(this.accounts.get().getUsername(), 100, ((this.getHeight() - g2.getFontMetrics().getAscent()) / 2) - 30);
+    g2.setTransform(t);
+
+    super.paint(graphics);
   }
 
   @Override

@@ -4,15 +4,12 @@ import com.google.common.eventbus.EventBus;
 import com.google.gson.Gson;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provider;
-import com.google.inject.matcher.Matchers;
 import com.google.inject.name.Names;
 import io.github.thecubemc.account.AccountFactory;
 import io.github.thecubemc.account.AccountStub;
 import io.github.thecubemc.annotations.Current;
-import io.github.thecubemc.annotations.RequiresAccount;
 import io.github.thecubemc.fs.FileSystem;
 import io.github.thecubemc.http.Network;
-import io.github.thecubemc.interceptor.RequiresAccountInterceptor;
 
 import javax.imageio.ImageIO;
 import java.awt.Font;
@@ -28,9 +25,6 @@ extends AbstractModule {
 
   @Override
   protected void configure() {
-    // Method Interceptors
-    this.bindInterceptor(Matchers.any(), Matchers.annotatedWith(RequiresAccount.class), new RequiresAccountInterceptor());
-
     // Default Values
     this.bind(String.class)
         .annotatedWith(Names.named("theCube-version"))

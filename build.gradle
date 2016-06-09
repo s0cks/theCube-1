@@ -1,9 +1,26 @@
+buildscript{
+    repositories(){
+        maven{
+            url "https://maven.eveoh.nl/content/repositories/releases"
+        }
+    }
+
+    dependencies{
+        classpath "nl.eveoh:gradle-aspectj:1.6"
+    }
+}
+
+project.ext{
+    aspectjVersion = "1.8.6"
+}
+
 group 'io.github.thecubemc'
 version '1.0.0.0'
 
 apply plugin: 'idea'
 
 subprojects {
+    apply plugin: 'aspectj'
     apply plugin: 'java'
     targetCompatibility = 1.8
     sourceCompatibility = 1.8
@@ -19,6 +36,8 @@ subprojects {
     dependencies {
         testCompile group: 'junit', name: 'junit', version: '4.11'
 
+        aspectpath project(":the-cube-services")
+
         compile group: 'com.mojang', name: 'authlib', version: '1.5.17'
         compile group: 'com.google.code.gson', name: 'gson', version: '2.6.2'
         compile group: 'com.google.guava', name: 'guava', version: '18.0'
@@ -28,5 +47,6 @@ subprojects {
         compile group: 'org.pegdown', name: 'pegdown', version: '1.6.0'
         compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.21'
         compile group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.21'
+        compile group: 'org.aspectj', name: 'aspectjrt', version: '1.8.6'
     }
 }

@@ -2,6 +2,7 @@ package io.github.thecubemc.ui;
 
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
+import io.github.thecubemc.TheCube;
 import io.github.thecubemc.account.AccountFactory;
 
 import javax.inject.Inject;
@@ -15,6 +16,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.AffineTransform;
+import java.io.IOException;
 
 @Singleton
 public final class TheCubeFrame
@@ -26,8 +28,9 @@ implements MouseMotionListener,
   private int dY;
 
   @Inject
-  private TheCubeFrame(@Named("theCube-version") String version, AccountFactory factory){
-    super("theCube - v" + version + " - " + factory.get().minecraftUsername);
+  private TheCubeFrame(@Named("theCube-version") String version, AccountFactory factory)
+  throws IOException {
+    super("theCube - v" + version + " - " + factory.get().getMinecraftUsername(TheCube.injector));
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     this.setSize(new Dimension(1000, 640));
 
@@ -42,10 +45,12 @@ implements MouseMotionListener,
     rotate.setToRotation(Math.toRadians(270), this.getWidth() - 10, ((this.getHeight() - g2.getFontMetrics().getAscent()) / 2) - 2);
     g2.setTransform(rotate);
     g2.setColor(Color.WHITE);
-    g2.drawString(this.accounts.get().getUsername(), 100, ((this.getHeight() - g2.getFontMetrics().getAscent()) / 2) - 30);
+    try {
+      g2.drawString(this.accounts.get().getMinecraftUsername(TheCube.injector), 100, ((this.getHeight() - g2.getFontMetrics().getAscent()) / 2) - 30);
+    } catch (IOException e) {
+      g2.drawString(e.getMessage(), 100, ((this.getHeight() - g2.getFontMetrics().getAscent()) / 2) - 30);
+    }
     g2.setTransform(t);
-
-    super.paint(graphics);
   }
 
   @Override

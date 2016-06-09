@@ -8,45 +8,53 @@ import io.github.thecubemc.event.LoginEvent;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 @Singleton
 public final class AccountFactory
 implements Provider<AccountStub> {
-  private static final AccountStub defaultStub = new AccountStub(null, "Default");
+  private static final AccountStub defaultStub = new AccountStub(null);
   private final MojangAuthentication auth = new MojangAuthentication();
 
   private final Map<String, Account> accounts = new HashMap<>();
+  private final Lock lock = new ReentrantLock();
   private Account current;
 
   public AccountStub login(Injector injector, String name) {
     if (this.accounts.containsKey(name)) return this.accounts.get(name)
                                                              .getStub(null);
-
-    System.out.println("Logging in");
-
     EventBus eventbus = injector.getInstance(EventBus.class);
     LoginEvent event = new LoginEvent(injector);
     eventbus.post(event);
 
     if (event.isCanceled()) {
-      System.out.println("Canceled");
-      this.current = null;
+      this.set(null);
       return this.get();
     }
 
-    System.out.println("Attempting Login: " + event.getUsername());
-    System.out.println("Got authentication");
     Account acc = this.auth.login(new Account(event.getUsername(), event.getPassword(), true));
-    System.out.println(">>: " + acc.getStub(null).minecraftUsername);
     this.accounts.put(name, acc);
-    this.current = acc;
+    this.set(acc);
     return this.get();
+  }
+
+  public void set(Account acc){
+    this.lock.lock();
+    try{
+      this.current = acc;
+    } finally{
+      this.lock.unlock();
+    }
   }
 
   @Override
   public AccountStub get() {
-    return this.current == null
-           ? defaultStub
-           : this.current.getStub(null);
+    this.lock.lock();
+    try{
+      return this.current == null ? defaultStub : this.current.getStub(null);
+    } finally{
+      this.lock.unlock();
+    }
   }
 }

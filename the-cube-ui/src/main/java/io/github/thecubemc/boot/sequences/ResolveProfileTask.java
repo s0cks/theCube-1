@@ -20,7 +20,6 @@ final class ResolveProfileTask {
   public BootResult doTask()
   throws IOException {
     this.factory.login(TheCube.injector, "asyncronous16@gmail.com");
-    System.out.println("Logged in");
     return BootResult.PASS;
   }
 }

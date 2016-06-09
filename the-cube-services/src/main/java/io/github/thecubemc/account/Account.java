@@ -18,7 +18,7 @@ final class Account{
 
   public AccountStub getStub(Injector injector){
     if(this.stub == null){
-      this.stub = new AccountStub(this, null);
+      this.stub = new AccountStub(this);
     }
 
     return this.stub;
@@ -40,5 +40,9 @@ final class Account{
 
   public String getPassword() {
     return password;
+  }
+
+  public String getUUID() {
+    return uuid;
   }
 }

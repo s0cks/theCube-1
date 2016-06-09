@@ -1,4 +1,3 @@
 rootProject.name = 'the-cube'
 include ':the-cube-ui'
 include ':the-cube-services'
-

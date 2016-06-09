@@ -1,7 +1,3 @@
-plugins {
-    id "net.ltgt.apt" version "0.6"
-}
-
 group 'io.github.thecubemc'
 version '1.0.0.0'
 

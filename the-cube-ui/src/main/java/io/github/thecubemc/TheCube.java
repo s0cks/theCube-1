@@ -15,6 +15,7 @@ import javax.swing.SwingUtilities;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 
 @Singleton
 public final class TheCube{
@@ -45,6 +46,15 @@ public final class TheCube{
     SwingUtilities.invokeLater(() ->{
       TheCube.injector.getInstance(TheCubeSplashScreen.class).setVisible(true);
     });
+
+    TheCubeSplashScreen splash = TheCube.injector.getInstance(TheCubeSplashScreen.class);
+    while(true){
+      Thread.sleep(TimeUnit.SECONDS.toMillis(1));
+      splash.addProgress(10);
+      if(splash.getProgress() == 100){
+        break;
+      }
+    }
   }
 
   public static void main(String... args)

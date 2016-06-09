@@ -19,7 +19,7 @@ extends JWindow {
   private final String version;
   private final Font font;
 
-  private float progress = 0.0F;
+  private int progress = 0;
 
   @Inject
   private TheCubeSplashScreen(@TheCubeResource("splash") BufferedImage bg, @TheCubeResource("font") Font font, @Named("theCube-version") String version){
@@ -29,6 +29,16 @@ extends JWindow {
     this.setSize(bg.getWidth(), bg.getHeight());
     this.setLocationRelativeTo(null);
     this.setAlwaysOnTop(true);
+  }
+
+  public void addProgress(int value){
+    if(this.progress >= 100) return;
+    this.progress += value;
+    System.out.println(this.progress);
+  }
+
+  public int getProgress(){
+    return this.progress;
   }
 
   @Override
@@ -42,7 +52,10 @@ extends JWindow {
     g2.setFont(this.font.deriveFont(12.0F));
     g2.drawString("v" + this.version, 65, 40 + height);
     g2.setFont(this.font.deriveFont(12.0F));
+
+    System.out.println((this.progress * 100) / 10000);
+
     g2.setColor(Color.CYAN);
-    g2.fillRect(0, this.getHeight() - 108, (int) (this.getWidth() * this.progress), 8);
+    g2.fillRect(0, this.getHeight() - 108, this.getWidth() * ((this.progress * 100) / 10000), 8);
   }
 }

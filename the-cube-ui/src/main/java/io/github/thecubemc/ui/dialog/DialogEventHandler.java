@@ -19,13 +19,11 @@ public final class DialogEventHandler{
   @Subscribe
   public void onRequestLoginEvent(RequestLoginEvent e){
     try {
-      System.out.println("Spawning LoginDialog");
       LoginDialog dialog = e.injector.getInstance(LoginDialog.class);
       SwingUtilities.invokeAndWait(()->{
         dialog.setEvent(e);
         dialog.setVisible(true);
       });
-      System.out.println("Closed LoginDialog");
     } catch (InterruptedException | InvocationTargetException e1) {
       EventBus bus = e.injector.getInstance(EventBus.class);
       bus.post(new ErrorEvent(e.injector, e1.getMessage()));

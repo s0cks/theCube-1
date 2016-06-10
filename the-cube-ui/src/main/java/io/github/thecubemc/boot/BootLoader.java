@@ -3,6 +3,8 @@ package io.github.thecubemc.boot;
 import com.google.common.reflect.ClassPath;
 import io.github.thecubemc.TheCube;
 import io.github.thecubemc.ui.TheCubeSplashScreen;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.SwingUtilities;
 import java.util.HashSet;
@@ -16,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 public final class BootLoader {
   private static final List<BootTask> registeredTasks = new LinkedList<>();
   private static final Set<String> ranTasks = new HashSet<>();
+  private static final Logger logger = LoggerFactory.getLogger(BootLoader.class);
 
   static {
     try {
@@ -36,14 +39,12 @@ public final class BootLoader {
   throws Exception{
     ExecutorService executor = Executors.newFixedThreadPool(forks);
     do{
-      System.out.println("Fetching Next Task");
       BootTask task = findNextAvailableTask();
       if(task == null) break;
-      System.out.println("Executing Task: " + task.name);
       executor.submit(() ->{
         try{
+          logger.info("Executing Task: " + task.name);
           if(task.task.doBoot() == BootResult.FAIL){
-            System.err.println("Failed to boot: " + task.name);
             System.exit(-1);
           }
         } catch(Exception e){

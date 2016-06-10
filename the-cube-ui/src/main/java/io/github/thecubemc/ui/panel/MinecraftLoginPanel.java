@@ -1,5 +1,8 @@
 package io.github.thecubemc.ui.panel;
 
+import com.google.inject.Inject;
+import io.github.thecubemc.annotations.TheCubeResource;
+
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -14,6 +17,7 @@ import java.awt.Color;
 import java.awt.Composite;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
@@ -21,12 +25,8 @@ import java.awt.GridBagLayout;
 
 public final class MinecraftLoginPanel
 extends JPanel {
-  private final JButton loginButton = new JButton("Login"){{
-    this.setUI(new ButtonSkin());
-  }};
-  private final JButton cancelButton = new JButton("Cancel"){{
-    this.setUI(new ButtonSkin());
-  }};
+  private final JButton loginButton = new JButton("Login");
+  private final JButton cancelButton = new JButton("Cancel");
   private final JTextField usernameField = new JTextField(16){{
     this.setForeground(Color.WHITE);
     this.setUI(new TextFieldSkin());
@@ -37,10 +37,15 @@ extends JPanel {
     this.setEchoChar('*');
   }};
 
-  public MinecraftLoginPanel(){
+  @Inject
+  private MinecraftLoginPanel(@TheCubeResource("font") Font font){
     super(new GridBagLayout());
     this.setOpaque(false);
     this.setPreferredSize(new Dimension(350, 400));
+    this.passwordField.setFont(font);
+    this.usernameField.setFont(font);
+    this.loginButton.setUI(new ButtonSkin(font));
+    this.cancelButton.setUI(new ButtonSkin(font));
     GridBagConstraints gbc = new GridBagConstraints();
     gbc.fill = GridBagConstraints.HORIZONTAL;
     gbc.gridx = gbc.gridy = 1;
@@ -49,12 +54,14 @@ extends JPanel {
     gbc.anchor = GridBagConstraints.WEST;
     this.add(new JLabel("Username: ", JLabel.LEFT){{
       this.setForeground(Color.WHITE);
+      this.setFont(font);
     }}, gbc);
     gbc.gridy++;
     this.add(this.usernameField, gbc);
     gbc.gridy++;
     this.add(new JLabel("Password: ", JLabel.LEFT){{
       this.setForeground(Color.WHITE);
+      this.setFont(font);
     }}, gbc);
     gbc.gridy++;
     this.add(this.passwordField, gbc);
@@ -111,6 +118,12 @@ extends JPanel {
 
   private static final class ButtonSkin
   extends BasicButtonUI {
+    private final Font font;
+
+    private ButtonSkin(Font font){
+      this.font = font;
+    }
+
     @Override
     public void installUI(JComponent jComponent) {
       super.installUI(jComponent);
@@ -123,6 +136,7 @@ extends JPanel {
     public void paint(Graphics graphics, JComponent jComponent) {
       JButton button = ((JButton) jComponent);
       Graphics2D g2 = ((Graphics2D) graphics);
+      g2.setFont(this.font);
       g2.setColor(button.getModel().isPressed() ? Color.BLACK : Color.WHITE);
       g2.fillRect(0, 0, button.getWidth(), button.getHeight());
       int x = ((button.getWidth() - g2.getFontMetrics().stringWidth(button.getText())) / 2);

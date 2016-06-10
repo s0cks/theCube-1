@@ -1,5 +1,6 @@
 package io.github.thecubemc.ui.dialog;
 
+import io.github.thecubemc.TheCube;
 import io.github.thecubemc.annotations.TheCubeResource;
 import io.github.thecubemc.event.RequestLoginEvent;
 import io.github.thecubemc.ui.TheCubeFrame;
@@ -41,7 +42,7 @@ extends JDialog{
     this.setSize(new Dimension(background.getWidth(), background.getHeight()));
     this.setLocationRelativeTo(null);
     this.background = background;
-    this.add((this.login = new MinecraftLoginPanel()), BorderLayout.WEST);
+    this.add((this.login = TheCube.injector.getInstance(MinecraftLoginPanel.class)), BorderLayout.WEST);
     this.add(new TheCubeFeedPanel(), BorderLayout.CENTER);
   }
 

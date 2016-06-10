@@ -7,6 +7,8 @@ import com.google.inject.Provider;
 import com.google.inject.name.Names;
 import io.github.thecubemc.account.AccountFactory;
 import io.github.thecubemc.account.AccountStub;
+import io.github.thecubemc.annotations.GitHubFeed;
+import io.github.thecubemc.feed.Feed;
 import io.github.thecubemc.fs.FileSystem;
 import io.github.thecubemc.http.Network;
 
@@ -45,6 +47,7 @@ extends AbstractModule {
         .toProvider(AccountFactory.class);
     this.bind(EventBus.class)
         .toProvider(() -> TheCube.instance().events);
+    this.bind(Feed.class).annotatedWith(GitHubFeed.class).to(io.github.thecubemc.feed.GitHubFeed.class);
 
     // Resources
     this.bind(BufferedImage.class)

@@ -24,7 +24,7 @@ extends JPanel{
     super(new GridBagLayout());
     this.setPreferredSize(new Dimension(350, 400));
     this.setOpaque(false);
-    this.gbc.fill = GridBagConstraints.BOTH;
+    this.gbc.fill = GridBagConstraints.HORIZONTAL;
     this.gbc.weightx = 1.0;
     this.gbc.weighty = 1.0;
     this.gbc.gridx = 0;

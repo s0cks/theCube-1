@@ -46,6 +46,7 @@ extends JPanel {
     gbc.gridx = gbc.gridy = 1;
     gbc.gridwidth = 1;
     gbc.insets.set(5, 2, 5, 2);
+    gbc.anchor = GridBagConstraints.WEST;
     this.add(new JLabel("Username: ", JLabel.LEFT){{
       this.setForeground(Color.WHITE);
     }}, gbc);
